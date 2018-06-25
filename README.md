@@ -1,2 +1,2 @@
 # learning-go
-gophercizes
+Learning Go using [gophercizes](https://gophercises.com/ "gophersizes").
