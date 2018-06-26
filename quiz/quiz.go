@@ -13,26 +13,26 @@ import (
 func main() {
 	var count, correct int
 
-	file_name := flag.String("file_name", "problems.csv", "name of csv file in the format of 'question,answer'")
-	time_limit := flag.Int("time_limit", 30, "time limit for the quiz")
+	fileName := flag.String("file", "problems.csv", "name of csv file in the format of 'question,answer'")
+	timeLimit := flag.Int("limit", 30, "time limit for the quiz, in seconds")
 	flag.Parse()
 
-	csv_file, err := os.Open(*file_name)
+	csvFile, err := os.Open(*fileName)
 	if err != nil {
-		exit(fmt.Sprintf("Failed to open file: %s\n", *file_name))
+		exit(fmt.Sprintf("Failed to open file: %s\n", *fileName))
 	}
-	csv_reader := csv.NewReader(csv_file)
-	input_reader := bufio.NewReader(os.Stdin)
+	csvReader := csv.NewReader(csvFile)
+	inputReader := bufio.NewReader(os.Stdin)
 
-	lines, err := csv_reader.ReadAll()
+	lines, err := csvReader.ReadAll()
 	if err != nil {
 		exit("Failed to parse file")
 	}
 
 	fmt.Println("Ready to start? Press enter to begin")
-	input_reader.ReadString('\n')
+	inputReader.ReadString('\n')
 
-	timer := time.NewTimer(time.Duration(*time_limit) * time.Second)
+	timer := time.NewTimer(time.Duration(*timeLimit) * time.Second)
 	go func() {
 		<-timer.C
 		exit(fmt.Sprintf("\nTimer expired! You got %d questions correct and %d incorrect.\n", correct, (count - correct)))
@@ -41,7 +41,7 @@ func main() {
 	for _, line := range lines {
 		count++
 		fmt.Printf("Problem #%d: %s = ", count, line[0])
-		ans, _ := input_reader.ReadString('\n')
+		ans, _ := inputReader.ReadString('\n')
 		if IsCorrect(line[1], ans) {
 			correct++
 		}
